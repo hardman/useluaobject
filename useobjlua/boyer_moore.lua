@@ -158,16 +158,20 @@ function boyer_moore:core_cal(src, model)
 				--如果最后一位没有重复，则用坏字符规则，否则使用好后缀
                 if #goodCharsPosTable[goodSuffix] > 1 then
                     local tmpIndex = nil
-					--从好后缀中找出 小于失配位置值中最大值
-                    for ii = 1, #goodCharsPosTable[goodSuffix] do
+					--从 好后缀 出现在model中所有的 下标中 找出 小于失配位置 的值中的 最大值
+					--比如 如果 好后缀是 e, 那么这个后缀出现在 example中为2次，{7,1}, 若badIndex是6那么我们则取1
+                    for ii = 1,#goodCharsPosTable[goodSuffix] do
                         if goodCharsPosTable[goodSuffix][ii] < badIndex + 1 then
                             tmpIndex = goodCharsPosTable[goodSuffix][ii]
+							break --刹住
                         end
                     end
+					--找到了一个
                     if tmpIndex ~= nil then
                         goodNextIndex = badIndex + 1 - tmpIndex
                         skipNums = goodNextIndex < badNextIndex and goodNextIndex or badNextIndex
-                        break
+					else
+						skipNums = badNextIndex
                     end
                 else
                     skipNums = badNextIndex
