@@ -1,4 +1,5 @@
 --package.path = package.path ..";C:\\Users\\dodo\\Desktop\\git\ user\\?.lua" require "main"
+--dofile "C:\\Users\\dodo\\Desktop\\git\ user\\main.lua"
 
 
 require "useobjlua.config"

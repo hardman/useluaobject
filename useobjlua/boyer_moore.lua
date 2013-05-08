@@ -14,8 +14,12 @@ function boyer_moore:execute()
 	local model = io.read("*line")
 	local res = self:core_cal(src, model)
 	if res ~= nil then
-		if type(res) == "number" then
-			print("找到~ 在第"..res.."个")
+		if #res > 0 then
+			io.write("找到"..#res.."个 {")
+			for _,v in ipairs(res) do
+			    io.write(tostring(v).." ")
+			end
+			print("}")
 		else
 			print("没找到~")
 		end
@@ -101,6 +105,7 @@ function boyer_moore:core_cal(src, model)
 	--]]
 	local goodCharsPosTable = self:getGoods(model)
 	--开始 
+	local resTable = {}
 	--srcIndex 表示每次循环 的起始点
 	local srcIndex = #model
 	while srcIndex <= #src do -- 起始点超过 src长度则返回
@@ -124,7 +129,9 @@ function boyer_moore:core_cal(src, model)
 		--此时，如果badIndex为空，则说明所有的model字符都匹配了，那么就是找到了直接返回
 		--如果不为空，则说明，出现了坏字符，此时，srcIndex表示坏字符对应的src的下标，badIndex表示，此时 model对应位置。
 		if badIndex == nil then --找到了
-			return srcIndex + 1
+			table.insert(resTable,srcIndex + 1) 
+			skipNums = #model
+			--return srcIndex + 1
 		else
 			--坏字符出现，需要比较坏字符 和好后缀 哪一个 跳的比较远
 			local badNextIndex
@@ -180,6 +187,7 @@ function boyer_moore:core_cal(src, model)
 		end
 		srcIndex = saveSrcIndex + skipNums
 	end
+	return resTable
 end
 
 function boyer_moore:exit()
